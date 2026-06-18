@@ -6,7 +6,19 @@ on:
   workflow_dispatch:
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run validate
+
   sync:
+    needs: validate
     runs-on: ubuntu-latest
     steps:
       - name: Pull data + re-seed game DB + refresh archive API
@@ -31,6 +43,9 @@ jobs:
             set -a
             [ -f .env ] && . ./.env
             set +a
+
+            DATASETS_DIR="$DEPLOY_PATH/datasets" npm run seed:datasets -- --dry-run
+
             DATASETS_DIR="$DEPLOY_PATH/datasets" npm run seed:datasets
 
             pm2 restart vetustas-archive-api
