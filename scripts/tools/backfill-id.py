@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 """Stamp a stable, opaque `id` (UUIDv4) as the first column of every dataset CSV.
 
-This is the cross-repo join key: the game seeds Item.id straight from it and the
-archive app serves it. It is assigned ONCE and then frozen — a row keeps its id
-for life, across title edits, re-sorts and column moves. New rows (blank/missing
-id) get a fresh UUID; existing ids are never touched.
-
 Usage:
   python3 scripts/backfill-id.py                 # fill missing ids in all CSVs
   python3 scripts/backfill-id.py datasets/x.csv  # one or more specific files
@@ -13,7 +8,7 @@ Usage:
 """
 import argparse, csv, glob, io, os, sys, uuid
 
-DATASETS_GLOB = os.path.join(os.path.dirname(__file__), "..", "datasets", "*.csv")
+DATASETS_GLOB = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", "*.csv")
 ID_COL = "id"
 
 
