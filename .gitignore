@@ -2,3 +2,12 @@
 *.swp
 node_modules
 *.tsbuildinfo
+
+tmp/
+
+.env
+.env.local
+
+backfill-*.ts
+debug-*.py
+enrich-*.ts
