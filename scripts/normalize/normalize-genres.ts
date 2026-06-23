@@ -10,7 +10,7 @@ import Papa from "papaparse";
 
 type Row = Record<string, string>;
 
-const DATASETS_DIR = path.resolve(__dirname, "..", "datasets");
+const DATASETS_DIR = path.resolve(__dirname, "..", "..", "datasets");
 
 type Vocab = {
   files: string[];
