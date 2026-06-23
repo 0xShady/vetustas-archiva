@@ -72,6 +72,17 @@ function pickType(instances: string[] | undefined): string {
   return v.charAt(0).toUpperCase() + v.slice(1);
 }
 
+function pickMuseum(p: ArtOrLandmarkProps, country: string): string {
+  const isCountry = (v: string) =>
+    !!v && v.toLowerCase() === country.toLowerCase();
+  let city = firstNonGeneric(p.museumCityLabel);
+  let name = firstNonGeneric(p.locationLabel);
+  if (isCountry(name)) name = "";
+  if (isCountry(city)) city = "";
+  if (city && name) return `${city}, ${name}`;
+  return name || city;
+}
+
 async function pickImage(p: ArtOrLandmarkProps): Promise<string> {
   if (p.image) {
     const thumb = commonsImageThumb(p.image, 600);
@@ -139,13 +150,17 @@ async function mapRow(
   if (!image) return null;
 
   const movement = normalizeMovement(firstNonGeneric(p.movementLabel));
+  const currentCountry =
+    firstNonGeneric(p.museumCountryLabel) || firstNonGeneric(p.countryLabel);
 
   return {
     id: "",
     title,
     creation_date: date,
     reference_url: p.wiki ?? "",
-    location: firstNonGeneric(p.locationLabel),
+    origin_country: firstNonGeneric(p.originCountryLabel),
+    current_country: currentCountry,
+    museum: pickMuseum(p, currentCountry),
     artist: cleanArtist(joinTop(p.creatorLabel, 2)),
     type: pickType(p.instanceLabels),
     medium: joinTop(p.mediumLabel, 2),

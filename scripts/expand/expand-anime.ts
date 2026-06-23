@@ -95,6 +95,13 @@ query ($page: Int, $perPage: Int, $search: String) {
       coverImage { extraLarge large }
       siteUrl
       averageScore
+      popularity
+      favourites
+      episodes
+      duration
+      source
+      season
+      seasonYear
       format
       studios { edges { isMain node { name } } }
       staff(perPage: 25) {
@@ -135,6 +142,13 @@ interface Media {
   coverImage?: { extraLarge?: string | null; large?: string | null };
   siteUrl?: string | null;
   averageScore?: number | null;
+  popularity?: number | null;
+  favourites?: number | null;
+  episodes?: number | null;
+  duration?: number | null;
+  source?: string | null;
+  season?: string | null;
+  seasonYear?: number | null;
   format?: string | null;
   studios?: { edges?: { isMain: boolean; node: { name: string } }[] };
   staff?: {
@@ -219,6 +233,25 @@ async function pickMangaka(m: Media): Promise<string> {
   return pickFromStaffEdges(mangaStaff);
 }
 
+function prettyEnum(v: string | null | undefined): string {
+  if (!v) return "";
+  return v
+    .toLowerCase()
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function pickSeason(m: Media): string {
+  const s = prettyEnum(m.season);
+  const y = m.seasonYear != null ? String(m.seasonYear) : "";
+  return [s, y].filter(Boolean).join(" ");
+}
+
+function numStr(n: number | null | undefined): string {
+  return n != null ? String(n) : "";
+}
+
 function toRow(m: Media): Row | null {
   const title = pickTitle(m.title);
   if (!title) return null;
@@ -241,6 +274,12 @@ function toRow(m: Media): Row | null {
     format: m.format ?? "",
     studio: pickStudio(m.studios),
     mangaka: "", // filled in below (async)
+    episodes: numStr(m.episodes),
+    duration_minutes: numStr(m.duration),
+    popularity: numStr(m.popularity),
+    favourites: numStr(m.favourites),
+    source: prettyEnum(m.source),
+    season: pickSeason(m),
     anilist_id: String(m.id),
   };
 }
