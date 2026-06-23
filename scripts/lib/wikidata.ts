@@ -80,6 +80,9 @@ export interface ArtOrLandmarkProps {
   architectLabel?: string;
   locationLabel?: string;
   countryLabel?: string;
+  originCountryLabel?: string;
+  museumCityLabel?: string;
+  museumCountryLabel?: string;
   mediumLabel?: string;
   movementLabel?: string;
   genreLabel?: string;
@@ -102,6 +105,9 @@ SELECT ?item ?inception ?image ?article ?height
        ?architect ?architectLabel
        ?location ?locationLabel
        ?country ?countryLabel
+       ?origin ?originLabel
+       ?museumCity ?museumCityLabel
+       ?museumCountry ?museumCountryLabel
        ?medium ?mediumLabel
        ?movement ?movementLabel
        ?genre ?genreLabel WHERE {
@@ -111,8 +117,11 @@ SELECT ?item ?inception ?image ?article ?height
   OPTIONAL { ?item wdt:P31 ?instance. }
   OPTIONAL { ?item wdt:P170 ?creator. }
   OPTIONAL { ?item wdt:P84 ?architect. }
-  OPTIONAL { ?item wdt:P276 ?location. }
+  OPTIONAL { ?item wdt:P276 ?location.
+             OPTIONAL { ?location wdt:P131 ?museumCity. }
+             OPTIONAL { ?location wdt:P17 ?museumCountry. } }
   OPTIONAL { ?item wdt:P17 ?country. }
+  OPTIONAL { ?item wdt:P495 ?origin. }
   OPTIONAL { ?item wdt:P186 ?medium. }
   OPTIONAL { ?item wdt:P135 ?movement. }
   OPTIONAL { ?item wdt:P136 ?genre. }
@@ -154,6 +163,9 @@ SELECT ?item ?inception ?image ?article ?height
         "architect",
         "location",
         "country",
+        "origin",
+        "museumCity",
+        "museumCountry",
         "medium",
         "movement",
         "genre",
@@ -175,6 +187,14 @@ SELECT ?item ?inception ?image ?article ?height
         p.locationLabel = Array.from(per.get("location")!).join(" · ");
       if (per.has("country"))
         p.countryLabel = Array.from(per.get("country")!).join(" · ");
+      if (per.has("origin"))
+        p.originCountryLabel = Array.from(per.get("origin")!).join(" · ");
+      if (per.has("museumCity"))
+        p.museumCityLabel = Array.from(per.get("museumCity")!).join(" · ");
+      if (per.has("museumCountry"))
+        p.museumCountryLabel = Array.from(per.get("museumCountry")!).join(
+          " · ",
+        );
       if (per.has("medium"))
         p.mediumLabel = Array.from(per.get("medium")!).join(" · ");
       if (per.has("movement"))
