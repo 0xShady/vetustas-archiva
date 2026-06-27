@@ -8,7 +8,7 @@
 movies, music, games, books, people, companies, inventions, landmarks, art and
 more, compiled and enriched from public sources into clean, consistent CSVs.
 
-[![Data: CC BY-SA 4.0](https://img.shields.io/badge/data-CC%20BY--SA%204.0-blue.svg)](LICENSE-DATA)
+[![Data: CC BY-SA 4.0](https://img.shields.io/badge/data-CC%20BY--SA%204.0-blue.svg)](datasets/LICENSE)
 [![Code: MIT](https://img.shields.io/badge/code-MIT-green.svg)](LICENSE)
 [![Records](https://img.shields.io/badge/records-4%2C531-orange)](#datasets)
 [![Datasets](https://img.shields.io/badge/datasets-14-orange)](#datasets)
@@ -125,13 +125,13 @@ in [`scripts/README.md`](scripts/README.md).**
 
 Dual-licensed:
 
-- **Datasets** (`datasets/`) — [CC BY-SA 4.0](LICENSE-DATA). Free to use, share
+- **Datasets** (`datasets/`) — [CC BY-SA 4.0](datasets/LICENSE). Free to use, share
   and adapt (including commercially) with attribution; derivatives stay open
   under the same license.
 - **Code** (`scripts/`) — [MIT](LICENSE).
 
 Data is compiled from public sources, each under its own terms.
-See [`LICENSE-DATA`](LICENSE-DATA) for the full attribution and source notes.
+See [`datasets/LICENSE`](datasets/LICENSE) for the full attribution and source notes.
 
 ## Contributing
 

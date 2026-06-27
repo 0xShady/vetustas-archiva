@@ -1,10 +1,13 @@
 Vetustas Archiva datasets
 Copyright (c) 2026 Achraf El fadili / Vetustas
 
-The contents of the datasets/ directory are licensed under the
+The data files in this directory are licensed under the
 
     Creative Commons Attribution-ShareAlike 4.0 International License
     (CC BY-SA 4.0)
+
+(The source code in the repository's scripts/ directory is licensed separately
+under the MIT License — see the LICENSE file at the repository root.)
 
 You are free to:
 
@@ -39,9 +42,8 @@ Where a value originates from one of these, the original terms also apply:
 - Wikipedia — text CC BY-SA 4.0; images per their individual licenses
 - The Movie Database (TMDB) — used under the TMDB terms of use
 - IMDb datasets — ratings/votes are from IMDb's public datasets, which are
-  provided for PERSONAL, NON-COMMERCIAL use only. If you
-  intend commercial use, replace or independently source
-  the imdb_rating / imdb_votes columns.
+  provided for PERSONAL, NON-COMMERCIAL use only. If you intend commercial use,
+  replace or independently source the imdb_rating / imdb_votes columns.
 - AniList, Last.fm, Spotify, MusicBrainz — used under their respective terms.
 
 Image columns (poster/cover/logo/crest/image) store URLs that point to externally
