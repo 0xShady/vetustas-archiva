@@ -4,7 +4,29 @@
   "private": true,
   "description": "Open dataset for Vetustas",
   "scripts": {
-    "validate": "ts-node scripts/validate.ts"
+    "validate": "ts-node scripts/validate.ts",
+    "backfill:id": "python3 scripts/tools/backfill-id.py",
+    "report": "python3 scripts/tools/report-datasets.py",
+    "report:write": "ts-node scripts/tools/update-readme-counts.ts",
+    "check:images": "python3 scripts/tools/check-image-urls.py",
+    "check:dates": "python3 scripts/tools/debug-suspect-dates.py",
+    "merge": "ts-node scripts/expand/merge.ts",
+    "normalize:genres": "ts-node scripts/normalize/normalize-genres.ts",
+    "normalize:art-movements": "ts-node scripts/normalize/normalize-art-movements.ts",
+    "expand:movies": "ts-node scripts/expand/expand-movies.ts",
+    "expand:tv": "ts-node scripts/expand/expand-tv.ts",
+    "expand:anime": "ts-node scripts/expand/expand-anime.ts",
+    "expand:games": "ts-node scripts/expand/expand-games.ts",
+    "expand:music": "ts-node scripts/expand/expand-music.ts",
+    "expand:fine-art": "ts-node scripts/expand/expand-fine-art.ts",
+    "expand:landmarks": "ts-node scripts/expand/expand-landmarks.ts",
+    "expand:literature": "ts-node scripts/expand/expand-literature.ts",
+    "expand:events": "ts-node scripts/expand/expand-events.ts",
+    "expand:inventions": "ts-node scripts/expand/expand-inventions.ts",
+    "expand:companies": "ts-node scripts/expand/expand-companies.ts",
+    "expand:people": "ts-node scripts/expand/expand-people.ts",
+    "expand:basketball-clubs": "ts-node scripts/expand/expand-basketball-clubs.ts",
+    "expand:football-clubs": "ts-node scripts/expand/expand-football-clubs.ts"
   },
   "dependencies": {
     "papaparse": "^5.5.3"
