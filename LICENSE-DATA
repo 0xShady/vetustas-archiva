@@ -1,0 +1,52 @@
+Vetustas Archiva datasets
+Copyright (c) 2026 Achraf El fadili / Vetustas
+
+The contents of the datasets/ directory are licensed under the
+
+    Creative Commons Attribution-ShareAlike 4.0 International License
+    (CC BY-SA 4.0)
+
+You are free to:
+
+- Share — copy and redistribute the material in any medium or format
+- Adapt — remix, transform, and build upon the material
+  for any purpose, even commercially.
+
+Under the following terms:
+
+- Attribution — You must give appropriate credit, provide a link to this
+  repository and to the license, and indicate if changes were made.
+- ShareAlike — If you remix, transform, or build upon the material, you must
+  distribute your contributions under the same license as the original.
+- No additional restrictions — You may not apply legal terms or technological
+  measures that legally restrict others from doing anything the license
+  permits.
+
+Full legal code: https://creativecommons.org/licenses/by-sa/4.0/legalcode
+Human summary: https://creativecommons.org/licenses/by-sa/4.0/
+
+Suggested attribution:
+"Vetustas Archiva (https://archiva.vetustas.net) (https://elfadiliachraf.tech), CC BY-SA 4.0"
+
+---
+
+Sources & acknowledgements
+
+The data is compiled and enriched from public sources, each under its own terms.
+Where a value originates from one of these, the original terms also apply:
+
+- Wikidata — CC0 1.0 (public domain)
+- Wikipedia — text CC BY-SA 4.0; images per their individual licenses
+- The Movie Database (TMDB) — used under the TMDB terms of use
+- IMDb datasets — ratings/votes are from IMDb's public datasets, which are
+  provided for PERSONAL, NON-COMMERCIAL use only. If you
+  intend commercial use, replace or independently source
+  the imdb_rating / imdb_votes columns.
+- AniList, Last.fm, Spotify, MusicBrainz — used under their respective terms.
+
+Image columns (poster/cover/logo/crest/image) store URLs that point to externally
+hosted files (e.g. Wikimedia Commons, image.tmdb.org). This repository does not
+host those images; each remains under its own license at the source.
+
+This dataset is provided "AS IS", without warranty of any kind. Facts may be
+incomplete or inaccurate.
