@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
       - run: npm ci
       - run: npm run validate
@@ -21,7 +21,7 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - name: Pull data + re-seed game DB + refresh archive API
+      - name: Pull data + re-seed game DB + restart archive API
         uses: appleboy/ssh-action@v1.2.0
         env:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
@@ -48,4 +48,13 @@ jobs:
 
             DATASETS_DIR="$DEPLOY_PATH/datasets" npm run seed:datasets
 
-            pm2 restart vetustas-archive-api
+            docker restart vetustas-api
+            for i in $(seq 1 30); do
+              if curl -sf http://127.0.0.1:3410/health > /dev/null; then
+                echo "archive API healthy"
+                exit 0
+              fi
+              sleep 2
+            done
+            docker logs --tail 50 vetustas-api
+            exit 1
