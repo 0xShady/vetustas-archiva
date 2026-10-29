@@ -21,40 +21,14 @@ jobs:
     needs: validate
     runs-on: ubuntu-latest
     steps:
-      - name: Pull data + re-seed game DB + restart archive API
-        uses: appleboy/ssh-action@v1.2.0
-        env:
-          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          envs: DEPLOY_PATH
-          script: |
-            set -euo pipefail
+      - uses: actions/checkout@v4
 
-            export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+      - name: SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-            cd "$DEPLOY_PATH"
-            git pull origin main
-
-            cd ../game
-            set -a
-            [ -f .env ] && . ./.env
-            set +a
-
-            DATASETS_DIR="$DEPLOY_PATH/datasets" npm run seed:datasets -- --dry-run
-
-            DATASETS_DIR="$DEPLOY_PATH/datasets" npm run seed:datasets
-
-            docker restart vetustas-api
-            for i in $(seq 1 30); do
-              if curl -sf http://127.0.0.1:3410/health > /dev/null; then
-                echo "archive API healthy"
-                exit 0
-              fi
-              sleep 2
-            done
-            docker logs --tail 50 vetustas-api
-            exit 1
+      - name: Pull data, re-seed the game, restart the archive API
+        run: ssh -i ~/.ssh/deploy_key "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" 'sh -s' < ops/sync.sh
