@@ -1,10 +1,13 @@
 #!/bin/sh
-# Runs on the server from the "Deploy data" workflow after validation: pulls the datasets, re-seeds
-# the game database through the game's tools image (dry run first), then restarts the archive API,
-# which reads the CSVs at start. --no-deps: a data deploy never recreates the database container.
+# Runs on the server from the "Deploy data" workflow after validation, with TAG set to the release:
+# checks out that tag, re-seeds the game database through the game's tools image (dry run first),
+# then restarts the archive API, which reads the CSVs at start. --no-deps: a data deploy never
+# recreates the database container.
 set -eu
+: "${TAG:?TAG must name the release to deploy}"
 
-git -C ~/apps/vetustas/archiva pull --ff-only origin main
+git -C ~/apps/vetustas/archiva fetch --quiet --tags --force origin
+git -C ~/apps/vetustas/archiva checkout --quiet --detach "refs/tags/$TAG"
 
 cd ~/apps/vetustas
 docker compose run --rm --no-deps tools npm run seed:datasets -- --dry-run

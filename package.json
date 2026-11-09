@@ -5,6 +5,7 @@
   "description": "Open dataset for Vetustas",
   "scripts": {
     "validate": "ts-node scripts/validate.ts",
+    "release": "sh scripts/release.sh",
     "backfill:id": "python3 scripts/tools/backfill-id.py",
     "report": "python3 scripts/tools/report-datasets.py",
     "report:write": "ts-node scripts/tools/update-readme-counts.ts",
