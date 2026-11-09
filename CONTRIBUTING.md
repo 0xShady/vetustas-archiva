@@ -80,4 +80,4 @@ documented in your PR description.
 
 Thanks again, every fix makes the dataset more trustworthy.
 
-For more details please reach out to the maintainer: [Achraf El fadili](https://elfadiliachraf.tech) contact@elfadiliachraf.tech.
+For more details please reach out to the maintainer: [Achraf El fadili](https://elfadiliachraf.tech) contact@vetustas.net.
