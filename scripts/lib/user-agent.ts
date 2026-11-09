@@ -15,6 +15,5 @@ export function userAgent(): string {
     process.env.ARCHIVA_CONTACT ??
     ""
   ).trim();
-  const contact = email ? `; contact: ${email}` : "";
-  return `vetustas-archiva/1.0 (https://vetustas.net${contact})`;
+  return `vetustas-archiva/1.0 (https://vetustas.net; contact: ${email || "contact@vetustas.net"})`;
 }
