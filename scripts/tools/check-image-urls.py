@@ -11,7 +11,7 @@ DATASETS_GLOB = os.path.join(os.path.dirname(__file__), "..", "..", "datasets", 
 IMAGE_COLS = ("poster", "cover", "crest", "logo", "image")
 LABEL_COLS = ("name", "title")
 
-UA = "vetustas-archiva-imgcheck/1.0 (+https://vetustas.net)"
+UA = "vetustas-archiva-imgcheck/1.0 (+https://vetustas.net; contact@vetustas.net)"
 
 
 def label_col(fields):
