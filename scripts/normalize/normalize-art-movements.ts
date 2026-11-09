@@ -10,7 +10,7 @@ import Papa from "papaparse";
 
 type Row = Record<string, string>;
 
-const DATASETS_DIR = path.resolve(__dirname, "..", "datasets");
+const DATASETS_DIR = path.resolve(__dirname, "..", "..", "datasets");
 const FILE = "fine-art.csv";
 const COLUMN = "movement";
 
@@ -138,7 +138,7 @@ function run(write: boolean): void {
 
   for (const r of rows) {
     const before = (r[COLUMN] ?? "").trim();
-    const after = normalizeMovement(before);
+    const after = normalizeMovement(before) || before;
     if (!after) {
       emptied++;
     } else {

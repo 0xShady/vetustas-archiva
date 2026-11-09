@@ -5,13 +5,13 @@ Reads only — never writes. CRLF/LF does not matter for reading.
 
 Usage:
   # report every dataset
-  python3 scripts/report-datasets.py
+  python3 scripts/tools/report-datasets.py
 
   # one or more specific files
-  python3 scripts/report-datasets.py datasets/anime.csv datasets/movies.csv
+  python3 scripts/tools/report-datasets.py datasets/anime.csv datasets/movies.csv
 
   # sort each table by fill rate (sparsest column first) instead of CSV order
-  python3 scripts/report-datasets.py --sort
+  python3 scripts/tools/report-datasets.py --sort
 """
 import argparse, csv, glob, json, os, re, sys
 

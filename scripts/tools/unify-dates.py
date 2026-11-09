@@ -3,9 +3,9 @@
 Years are zero-padded to at least 4 digits so the column sorts and reads cleanly.
 
 Usage:
-  python3 scripts/unify-dates.py datasets/events.csv            # cols date,end_date
-  python3 scripts/unify-dates.py datasets/events.csv --columns date,end_date
-  python3 scripts/unify-dates.py datasets/events.csv --check    # report only, no write
+  python3 scripts/tools/unify-dates.py datasets/events.csv            # cols start_date,end_date
+  python3 scripts/tools/unify-dates.py datasets/events.csv --columns start_date,end_date
+  python3 scripts/tools/unify-dates.py datasets/events.csv --check    # report only, no write
 """
 import argparse, csv, re, sys
 
@@ -40,15 +40,15 @@ def unify(value):
 def main():
     ap = argparse.ArgumentParser(description="Unify dataset date columns to signed-ISO.")
     ap.add_argument("file")
-    ap.add_argument("--columns", default="date,end_date",
-                    help="comma-separated date columns (default: date,end_date)")
+    ap.add_argument("--columns", default="start_date,end_date",
+                    help="comma-separated date columns (default: start_date,end_date)")
     ap.add_argument("--check", action="store_true", help="report only, do not write")
     args = ap.parse_args()
 
     cols = [c.strip() for c in args.columns.split(",") if c.strip()]
     with open(args.file, "rb") as fh:
         eol = "\r\n" if b"\r\n" in fh.read(1 << 16) else "\n"
-    with open(args.file, newline="") as fh:
+    with open(args.file, newline="", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
         fields = reader.fieldnames
         rows = list(reader)
@@ -82,7 +82,7 @@ def main():
     if args.check:
         print("(--check: no file written)")
         return
-    with open(args.file, "w", newline="") as fh:
+    with open(args.file, "w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=fields, lineterminator=eol)
         w.writeheader()
         w.writerows(rows)

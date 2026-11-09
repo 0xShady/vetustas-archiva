@@ -1,7 +1,7 @@
 /**
  * Normalize fine-art.csv `movement` and `genre` columns in place.
  *
- *   npx tsx scripts/tools/normalize-fine-art.ts
+ *   npx ts-node scripts/tools/normalize-fine-art.ts
  *
  * - movement → reuses normalizeMovement (the canonical art-movement vocab).
  * - genre    → the dataset's lowercase genre taxonomy via keyword rules

@@ -2,9 +2,9 @@
 """Stamp a stable, opaque `id` (UUIDv4) as the first column of every dataset CSV.
 
 Usage:
-  python3 scripts/backfill-id.py                 # fill missing ids in all CSVs
-  python3 scripts/backfill-id.py datasets/x.csv  # one or more specific files
-  python3 scripts/backfill-id.py --check         # error if any row lacks an id (no write)
+  python3 scripts/tools/backfill-id.py                 # fill missing ids in all CSVs
+  python3 scripts/tools/backfill-id.py datasets/x.csv  # one or more specific files
+  python3 scripts/tools/backfill-id.py --check         # error if any row lacks an id (no write)
 """
 import argparse, csv, glob, io, os, sys, uuid
 

@@ -8,6 +8,10 @@
 //   3. title/name — meta.titleField non-empty on every row.
 //   4. date — meta.dateColumn parses with the SAME grammar the game seeder uses,
 //      so a row that passes here is guaranteed to seed (not get skipped).
+//   5. dates are real calendar dates with 4+ digit years, and the secondary
+//      date columns (when filled) follow the same rules.
+//   6. image: present, https, and a file (not a wiki page): the game's CSP
+//      blocks http images and an HTML page never renders as a picture.
 //
 
 import fs from "node:fs";
@@ -33,6 +37,47 @@ const parsesAsDate = (v: string | undefined) => {
   const s = (v ?? "").trim();
   return s !== "" && DATE_RES.some((re) => re.test(s));
 };
+
+const SECONDARY_DATE_COLUMNS: Record<string, string[]> = {
+  "tv.csv": ["last_aired"],
+  "events.csv": ["end_date"],
+};
+
+function dateProblem(value: string): string | null {
+  const s = value.trim();
+  if (!parsesAsDate(s)) return "unparseable";
+  const iso = /^(-?)(\d+)(?:-(\d{2}))?(?:-(\d{2}))?$/.exec(s);
+  if (!iso) return null;
+  const [, sign, digits, mm, dd] = iso;
+  if (digits.length < 4) return "year needs at least 4 digits";
+  if (!mm) return null;
+  const month = Number(mm);
+  if (month < 1 || month > 12) return "month out of range";
+  if (!dd) return null;
+  const day = Number(dd);
+  const probe = new Date(0);
+  probe.setUTCFullYear(Number(sign + digits), month, 0);
+  if (day < 1 || day > probe.getUTCDate()) return "day out of range";
+  return null;
+}
+
+const IMAGE_COLUMNS = ["image", "poster", "cover", "logo", "crest"];
+
+function imageProblem(url: string): string | null {
+  if (!url) return "missing image";
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return `image is not a URL: "${url.slice(0, 60)}"`;
+  }
+  if (parsed.protocol !== "https:") return `image must use https: "${url.slice(0, 60)}"`;
+  const wiki = /(^|\.)(wikipedia|wikimedia)\.org$/.test(parsed.hostname);
+  if (wiki && parsed.pathname.startsWith("/wiki/") && !parsed.pathname.startsWith("/wiki/Special:FilePath/")) {
+    return `image points to a wiki page, not a file: "${url.slice(0, 60)}"`;
+  }
+  return null;
+}
 
 function readCsv(file: string): {
   rows: Row[];
@@ -122,10 +167,27 @@ function main(): void {
         );
       }
 
-      if (!parsesAsDate(r[meta.dateColumn])) {
+      const imageColumn = meta.columns.find((c) => IMAGE_COLUMNS.includes(c));
+      const imageIssue = imageColumn ? imageProblem((r[imageColumn] ?? "").trim()) : null;
+      if (imageIssue) {
+        errors.push(`${meta.file}:${line}  ${imageIssue} (id="${id}")`);
+      }
+
+      const primary = r[meta.dateColumn] ?? "";
+      const primaryIssue = dateProblem(primary);
+      if (primaryIssue) {
         errors.push(
-          `${meta.file}:${line}  unparseable ${meta.dateColumn}="${(r[meta.dateColumn] ?? "").slice(0, 24)}" (id="${id}")`,
+          `${meta.file}:${line}  ${primaryIssue} ${meta.dateColumn}="${primary.slice(0, 24)}" (id="${id}")`,
         );
+      }
+      for (const col of SECONDARY_DATE_COLUMNS[meta.file] ?? []) {
+        const value = (r[col] ?? "").trim();
+        const issue = value ? dateProblem(value) : null;
+        if (issue) {
+          errors.push(
+            `${meta.file}:${line}  ${issue} ${col}="${value.slice(0, 24)}" (id="${id}")`,
+          );
+        }
       }
     });
   }
@@ -140,7 +202,7 @@ function main(): void {
   if (warnings.length)
     console.warn(`${warnings.length} warning(s):\n` + warnings.join("\n"));
   console.log(
-    `${seen.size} rows across ${metas.length} files — schema matches DATASET_META, ids unique, dates parse.`,
+    `${seen.size} rows across ${metas.length} files: schema matches DATASET_META, ids unique, dates are valid, images are https files.`,
   );
 }
 

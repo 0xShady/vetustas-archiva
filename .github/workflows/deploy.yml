@@ -1,15 +1,33 @@
 name: Deploy data
 
+# A published GitHub Release deploys the datasets: the server checks out the
+# release tag, re-seeds the game database and restarts the archive API.
+# Merging to main only runs the checks (ci.yml). Run this workflow by hand with
+# an older tag to roll the data back.
 on:
-  push:
-    branches: [main]
+  release:
+    types: [published]
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to deploy (an older one rolls the data back)
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-data
+  cancel-in-progress: false
 
 jobs:
   validate:
+    if: github.event_name == 'workflow_dispatch' || !github.event.release.prerelease || vars.DEPLOY_PRERELEASES == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
       - uses: actions/setup-node@v4
         with:
           node-version: 24
@@ -20,8 +38,13 @@ jobs:
   sync:
     needs: validate
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || inputs.tag }}
 
       - name: SSH key
         run: |
@@ -30,5 +53,5 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           echo "${{ secrets.DEPLOY_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
 
-      - name: Pull data, re-seed the game, restart the archive API
-        run: ssh -i ~/.ssh/deploy_key "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" 'sh -s' < ops/sync.sh
+      - name: Check out the release on the server, re-seed the game, restart the archive API
+        run: ssh -i ~/.ssh/deploy_key "${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}" "TAG=$TAG sh -s" < ops/sync.sh

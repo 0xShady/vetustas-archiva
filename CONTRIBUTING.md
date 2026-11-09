@@ -31,14 +31,16 @@ Reusing or changing an `id` breaks anything that references the data over time.
    - **Controlled columns** (`genre`, `type`, `category`, `movement`, `era`):
      use a value already present in that column. Run the matching normalizer if
      unsure (`npm run normalize:genres`, etc.).
-   - **Images**: a direct URL to a hosted file (Wikimedia Commons, etc.). Prefer
-     stable hosts. Don't commit binary images to the repo.
+   - **Images**: required, an `https://` URL to a hosted file (Wikimedia Commons,
+     etc.), not a wiki page like `/wiki/File:…`. A Commons file can use
+     `https://commons.wikimedia.org/wiki/Special:FilePath/<file>?width=600`.
+     Prefer stable hosts. Don't commit binary images to the repo.
 3. Validate before opening a PR:
 
    ```bash
    npm install            # first time only
    npm run backfill:id    # if you added rows
-   npm run validate       # MUST pass: schema, unique ids, parseable dates
+   npm run validate       # MUST pass: schema, unique ids, parseable dates, https image files
    ```
 
 4. Optional but appreciated:
@@ -78,4 +80,4 @@ documented in your PR description.
 
 Thanks again, every fix makes the dataset more trustworthy.
 
-For more details please reach out to the maintainer: [Achraf El fadili](https://elfadiliachraf.tech) contact@elfadiliachraf.tech.
+For more details please reach out to the maintainer: [Achraf El fadili](https://elfadiliachraf.tech) contact@vetustas.net.

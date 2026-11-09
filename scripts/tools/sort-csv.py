@@ -2,10 +2,10 @@
 """Sort a CSV by a column, in place (or to --output).
 
 Usage:
-  python3 scripts/sort-csv.py datasets/events.csv date
-  python3 scripts/sort-csv.py datasets/events.csv date --desc
-  python3 scripts/sort-csv.py datasets/movies.csv imdb_rating --desc --type number
-  python3 scripts/sort-csv.py datasets/people.csv name --type text --output sorted.csv
+  python3 scripts/tools/sort-csv.py datasets/events.csv start_date
+  python3 scripts/tools/sort-csv.py datasets/events.csv start_date --desc
+  python3 scripts/tools/sort-csv.py datasets/movies.csv imdb_rating --desc --type number
+  python3 scripts/tools/sort-csv.py datasets/people.csv name --type text --output sorted.csv
 
 Args:
   file                 path to the CSV
@@ -72,7 +72,7 @@ def main():
     args = ap.parse_args()
 
     eol = line_ending(args.file)
-    with open(args.file, newline="") as fh:
+    with open(args.file, newline="", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
         fields = reader.fieldnames
         rows = list(reader)
@@ -95,7 +95,7 @@ def main():
     out_rows = (blank_rows + ordered) if args.blanks == "first" else (ordered + blank_rows)
 
     dest = args.output or args.file
-    with open(dest, "w", newline="") as fh:
+    with open(dest, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields, lineterminator=eol)
         writer.writeheader()
         writer.writerows(out_rows)

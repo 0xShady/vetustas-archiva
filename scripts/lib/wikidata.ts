@@ -22,6 +22,8 @@ async function throttle() {
   lastCall = Date.now();
 }
 
+class SparqlClientError extends Error {}
+
 export async function runSparql(
   query: string,
   label = "sparql",
@@ -56,9 +58,9 @@ export async function runSparql(
         await new Promise((r) => setTimeout(r, waitMs));
         continue;
       }
-      throw new Error(`SPARQL ${res.status} on ${label}`);
+      throw new SparqlClientError(`SPARQL ${res.status} on ${label}`);
     } catch (e) {
-      if (attempt === MAX_ATTEMPTS - 1) throw e;
+      if (e instanceof SparqlClientError || attempt === MAX_ATTEMPTS - 1) throw e;
       await new Promise((r) => setTimeout(r, (attempt + 1) * 5000));
     }
   }
