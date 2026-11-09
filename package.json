@@ -9,7 +9,7 @@
     "report": "python3 scripts/tools/report-datasets.py",
     "report:write": "ts-node scripts/tools/update-readme-counts.ts",
     "check:images": "python3 scripts/tools/check-image-urls.py",
-    "check:dates": "python3 scripts/tools/debug-suspect-dates.py",
+    "check:dates": "python3 scripts/tools/check-suspect-dates.py",
     "merge": "ts-node scripts/expand/merge.ts",
     "normalize:genres": "ts-node scripts/normalize/normalize-genres.ts",
     "normalize:art-movements": "ts-node scripts/normalize/normalize-art-movements.ts",

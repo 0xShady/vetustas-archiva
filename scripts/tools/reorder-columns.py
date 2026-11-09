@@ -30,7 +30,7 @@ def main():
         sys.exit("error: give --order and/or --last")
 
     eol = line_ending(args.file)
-    with open(args.file, newline="") as fh:
+    with open(args.file, newline="", encoding="utf-8") as fh:
         reader = csv.DictReader(fh)
         fields = reader.fieldnames or []
         rows = list(reader)
@@ -61,7 +61,7 @@ def main():
         return
 
     dest = args.output or args.file
-    with open(dest, "w", newline="") as fh:
+    with open(dest, "w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=new_fields, lineterminator=eol)
         writer.writeheader()
         writer.writerows(rows)

@@ -398,11 +398,12 @@ function run(write: boolean): void {
 
       for (const r of rows) {
         const before = (r.genre ?? "").trim();
-        const canon = canonicalize(before, v);
-        if (canon.length === 0) {
+        const matched = canonicalize(before, v);
+        if (matched.length === 0 && before) {
           emptied++;
-          diffs.push(`   UNMATCHED [${before}] — ${r.title ?? ""}`);
+          diffs.push(`   UNMATCHED [${before}] kept as is: ${r.title ?? ""}`);
         }
+        const canon = matched.length === 0 && before ? [before] : matched;
         for (const c of canon) dist[c] = (dist[c] ?? 0) + 1;
         const after = canon.join("; ");
         if (after !== before && diffs.length < 12)
@@ -413,7 +414,7 @@ function run(write: boolean): void {
       console.log(`\n===== ${file}: ${rows.length} rows =====`);
       for (const c of v.order)
         if (dist[c]) console.log(`  ${String(dist[c]).padStart(4)} ${c}`);
-      if (emptied) console.log(`  (!) ${emptied} rows produced no genre`);
+      if (emptied) console.log(`  (!) ${emptied} rows kept an unmatched genre (add it to the vocabulary)`);
       for (const d of diffs.slice(0, 8)) console.log(d);
 
       if (write) {
