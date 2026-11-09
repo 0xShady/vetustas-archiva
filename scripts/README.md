@@ -4,12 +4,13 @@ Everything that **generates, validates and maintains** the datasets. You only
 need these to add or refresh data — consuming the CSVs needs none of this.
 
 - **TypeScript** scripts run via [`ts-node`](https://typestrong.org/ts-node/)
-  (wired as `npm run …`) or directly with `npx tsx <file>`.
+  (wired as `npm run …`) or directly with `npx ts-node <file>`.
 - **Python** scripts need Python 3 (no extra deps).
 
 ```bash
-npm install                         # once
-cp ../.env.example ../.env          # add API keys where a source needs one
+npm install                         # once, from the repo root
+cp .env.example .env                # add API keys where a source needs one
+                                    # (run every command from the repo root)
 ```
 
 ## Typical workflow
@@ -103,13 +104,13 @@ default**, pass `--write` to apply.
 | `npm run normalize:genres -- --write`        | `genre`    | movies, tv, games, music |
 | `npm run normalize:art-movements -- --write` | `movement` | fine-art                 |
 
-Per-dataset normalizers (run with `npx tsx`, in-place, idempotent):
+Per-dataset normalizers (run with `npx ts-node`, in-place, idempotent):
 
 | Script                                         | Column(s)           |
 | ---------------------------------------------- | ------------------- |
-| `npx tsx scripts/tools/normalize-companies.ts` | `type`, `industry`  |
-| `npx tsx scripts/tools/normalize-events.ts`    | `type`              |
-| `npx tsx scripts/tools/normalize-fine-art.ts`  | `movement`, `genre` |
+| `npx ts-node scripts/tools/normalize-companies.ts` | `type`, `industry`  |
+| `npx ts-node scripts/tools/normalize-events.ts`    | `type`              |
+| `npx ts-node scripts/tools/normalize-fine-art.ts`  | `movement`, `genre` |
 
 ---
 

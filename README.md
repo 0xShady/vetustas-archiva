@@ -21,7 +21,7 @@ more, compiled and enriched from public sources into clean, consistent CSVs.
 
 </div>
 
-**4,531 records across 14 datasets.** Plain CSV, one file per category. No build
+**4,531 records across 14 datasets.** Plain CSV, one file per subcategory. No build
 step needed to use the data — just read the files.
 
 ## The Vetustas ecosystem
@@ -73,24 +73,21 @@ language):
 
 ```python
 import csv
-with open("datasets/movies.csv") as f:
+with open("datasets/movies.csv", newline="", encoding="utf-8") as f:
     for row in csv.DictReader(f):
         print(row["title"], row["release_date"], row["imdb_rating"])
 ```
 
 ```typescript
+// Use a CSV parser: fields can contain commas and the files use CRLF line endings.
 import fs from "fs";
-const movies = fs
-  .readFileSync("datasets/movies.csv", "utf-8")
-  .split("\n")
-  .slice(1)
-  .map((line) => line.split(","))
-  .map(([id, title, release_date, imdb_rating]) => ({
-    id,
-    title,
-    release_date,
-    imdb_rating,
-  }));
+import Papa from "papaparse";
+
+const { data: movies } = Papa.parse<Record<string, string>>(
+  fs.readFileSync("datasets/movies.csv", "utf-8"),
+  { header: true, skipEmptyLines: true },
+);
+console.log(movies[0].title, movies[0].release_date, movies[0].imdb_rating);
 ```
 
 Or query it live, without cloning anything, via the **public API**:
