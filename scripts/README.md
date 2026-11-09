@@ -19,7 +19,7 @@ npm run expand:games                # scrape new candidate rows for a dataset â†
 npm run merge -- games              # merge reviewed candidates into datasets/games.csv
 npm run backfill:id                 # stamp UUIDs onto any blank id
 npm run normalize:genres -- --write # canonicalize controlled columns
-npm run validate                    # gate: schema + unique ids + dates  (must pass)
+npm run validate                    # gate: schema + unique ids + dates + images  (must pass)
 ```
 
 ---
@@ -88,7 +88,7 @@ npm run expand:movies -- --limit 100
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `npm run merge -- <slug>` | Merge reviewed `tmp/<slug>.new.csv` candidates into `datasets/<slug>.csv`, de-duplicating against existing rows.                                  |
 | `npm run backfill:id`     | Stamp a fresh UUIDv4 onto every blank `id`. Never touches an existing `id`. Run after adding rows.                                                |
-| `npm run validate`        | **The CI gate.** Checks each CSV's header matches its schema, `id` is present and globally unique, and dates parse. Exit non-zero on any problem. |
+| `npm run validate`        | **The CI gate.** Checks each CSV's header matches its schema, `id` is present and globally unique, the primary date parses, and every row has an `https` image URL that points to a file (not a wiki page). Exit non-zero on any problem. |
 | `npm run report`          | Print a per-dataset summary (row counts, column coverage).                                                                                        |
 
 ---

@@ -113,7 +113,7 @@ cp .env.example .env       # add API keys where a source needs one (e.g. TMDB)
 
 npm run expand:movies      # one scraper per category (expand:tv, expand:games, …)
 npm run backfill:id        # stamp UUIDs onto new rows
-npm run validate           # schema, unique ids, date checks
+npm run validate           # schema, unique ids, dates, https image files
 ```
 
 📖 **Full script reference — every command, what it does, and its arguments, is

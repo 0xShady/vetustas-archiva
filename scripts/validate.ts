@@ -8,6 +8,8 @@
 //   3. title/name — meta.titleField non-empty on every row.
 //   4. date — meta.dateColumn parses with the SAME grammar the game seeder uses,
 //      so a row that passes here is guaranteed to seed (not get skipped).
+//   5. image: present, https, and a file (not a wiki page): the game's CSP
+//      blocks http images and an HTML page never renders as a picture.
 //
 
 import fs from "node:fs";
@@ -33,6 +35,24 @@ const parsesAsDate = (v: string | undefined) => {
   const s = (v ?? "").trim();
   return s !== "" && DATE_RES.some((re) => re.test(s));
 };
+
+const IMAGE_COLUMNS = ["image", "poster", "cover", "logo", "crest"];
+
+function imageProblem(url: string): string | null {
+  if (!url) return "missing image";
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return `image is not a URL: "${url.slice(0, 60)}"`;
+  }
+  if (parsed.protocol !== "https:") return `image must use https: "${url.slice(0, 60)}"`;
+  const wiki = /(^|\.)(wikipedia|wikimedia)\.org$/.test(parsed.hostname);
+  if (wiki && parsed.pathname.startsWith("/wiki/") && !parsed.pathname.startsWith("/wiki/Special:FilePath/")) {
+    return `image points to a wiki page, not a file: "${url.slice(0, 60)}"`;
+  }
+  return null;
+}
 
 function readCsv(file: string): {
   rows: Row[];
@@ -122,6 +142,12 @@ function main(): void {
         );
       }
 
+      const imageColumn = meta.columns.find((c) => IMAGE_COLUMNS.includes(c));
+      const imageIssue = imageColumn ? imageProblem((r[imageColumn] ?? "").trim()) : null;
+      if (imageIssue) {
+        errors.push(`${meta.file}:${line}  ${imageIssue} (id="${id}")`);
+      }
+
       if (!parsesAsDate(r[meta.dateColumn])) {
         errors.push(
           `${meta.file}:${line}  unparseable ${meta.dateColumn}="${(r[meta.dateColumn] ?? "").slice(0, 24)}" (id="${id}")`,
@@ -140,7 +166,7 @@ function main(): void {
   if (warnings.length)
     console.warn(`${warnings.length} warning(s):\n` + warnings.join("\n"));
   console.log(
-    `${seen.size} rows across ${metas.length} files — schema matches DATASET_META, ids unique, dates parse.`,
+    `${seen.size} rows across ${metas.length} files: schema matches DATASET_META, ids unique, dates parse, images are https files.`,
   );
 }
 
