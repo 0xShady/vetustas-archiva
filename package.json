@@ -6,6 +6,7 @@
   "scripts": {
     "validate": "ts-node scripts/validate.ts",
     "release": "sh scripts/release.sh",
+    "op": "sh scripts/with-op.sh",
     "backfill:id": "python3 scripts/tools/backfill-id.py",
     "report": "python3 scripts/tools/report-datasets.py",
     "report:write": "ts-node scripts/tools/update-readme-counts.ts",
@@ -15,7 +16,7 @@
     "normalize:genres": "ts-node scripts/normalize/normalize-genres.ts",
     "normalize:art-movements": "ts-node scripts/normalize/normalize-art-movements.ts",
     "expand:movies": "ts-node scripts/expand/expand-movies.ts",
-    "expand:tv": "ts-node scripts/expand/expand-tv.ts",
+    "expand:tv": "sh scripts/with-op.sh ts-node scripts/expand/expand-tv.ts",
     "expand:anime": "ts-node scripts/expand/expand-anime.ts",
     "expand:games": "ts-node scripts/expand/expand-games.ts",
     "expand:music": "ts-node scripts/expand/expand-music.ts",
